@@ -142,7 +142,7 @@ function promise_setTarget(type, key, val, ttl) {
     console.log(val);
     console.log(ttl);
 
-    target.HMSET(key, val, ttl, function (err, reply) {
+    target.HMSET(key, val, function (err, reply) {
       if (err) return def.reject(err);
       return def.resolve(reply);
     });
@@ -153,10 +153,18 @@ function promise_setTarget(type, key, val, ttl) {
     console.log(val);
     console.log(ttl);
 
-    target.SETEX(key, ttl, val, function (err, reply) {
-      if (err) return def.reject(err);
-      return def.resolve(reply);
-    });
+    if (ttl) {
+      target.SETEX(key, ttl, val, function (err, reply) {
+        if (err) return def.reject(err);
+        return def.resolve(reply);
+      });
+    }
+    else {
+      target.SET(key, val, function (err, reply) {
+        if (err) return def.reject(err);
+        return def.resolve(reply);
+      });
+    }
   } 
 
   return def.promise;
