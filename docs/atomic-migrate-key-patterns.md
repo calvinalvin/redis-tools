@@ -14,7 +14,7 @@ Atomic migration of redis keys based on pattern match from one instance to anoth
  - In order to speed up transfers, you can fire up multiple instances of this program and give each instance different patterns
  - Use the pattern '*' to migrate all keys
 
-###### Currently there is no option to automatically delete keys after they have been migrated. This is by design to prevent accidental deletion of keys.
+###### Currently there is no option to automatically delete keys from the source instance after they have been migrated. This is by design to prevent accidental deletion of keys.
  - You can delete keys manually by use the atomic-delete-key-patterns.js program to delete all keys matching a pattern
 
 #### Usage:
