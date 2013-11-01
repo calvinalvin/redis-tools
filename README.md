@@ -51,3 +51,9 @@ var patterns = [
   "wh[ae]tever"
 ];
 ```
+
+Then just run in your console:
+
+```bash
+node atomic-migrate-key-patterns.js
+```
