@@ -5,6 +5,7 @@ Atomic migration of redis keys based on pattern match from one instance to anoth
 
 #### Use this if:
  - redis MIGRATE is not an option because you need to authorize against the target redis instance
+ - if the source redis instance cannot reach the target redis instance, you can use this app by running it from the target instance
  - using BGSAVE and then restoring from the dumped .rdb file is not an option
  - you only want to copy over certain keys based on a pattern match
 
