@@ -12,12 +12,20 @@
 ** - Since these are atomic operations, the migrations are slow and bound by network latency.
 ** - Most of the time is sucked up on network round-trip operations
 ** - In order to speed up transfers, you can fire up multiple instances of this program and give each instance different patterns
+** - Use the pattern '*' to migrate all keys
+** 
+** Currently there is no option to automatically delete keys after they have been migrated. This is as a fail safe measure.
+** You can delete keys manually by use the atomic-delete-key-patterns.js program to delete all keys matching a pattern
 */
 
 var sys = require('sys')
   , redis = require('redis')
-  , deferred = require('deferred');
+  , async = require('async')
+  , deferred = require('deferred')
+  , colors = require('colors');
 
+
+var start = process.hrtime();
 
 var sourceOpts = {
   hostname: 'source.host.com',
@@ -35,7 +43,7 @@ var targetOpts = {
  
 // add here the patterns for the keys you want to migrate from a source instance to a target instance
 var patterns = [
-  "*pattern*"
+  "*"
 ];
  
 var source = redis.createClient(sourceOpts.port, sourceOpts.hostname);
@@ -105,8 +113,8 @@ function promise_setTarget(type, key, val, ttl) {
   var def = deferred();
 
   if (type == 'hash') {
-    console.log('migrating object');
-    console.log(key);
+    console.log('migrating: '.cyan + key);
+    console.log(type);
     console.log(val);
     console.log(ttl);
 
@@ -116,8 +124,8 @@ function promise_setTarget(type, key, val, ttl) {
     });
   }
   else if (type == 'string'){
-    console.log('migrating string');
-    console.log(key);
+    console.log('migrating: '.cyan + key);
+    console.log(type);
     console.log(val);
     console.log(ttl);
 
@@ -140,29 +148,46 @@ function migrate(callback) {
     console.log(new Date()+" : "+len);
     g_last_n = len;
   }
-  
-  console.log('migrating: ' + key);
 
-  var val = null;
-  var ttl = null;
-  var type = null;
+  var type, val, ttl;
 
   promise_getTypeFromSource(key)
     .then(function (typeFromSource) {
       type = typeFromSource;
-      return promise_getTTLFromSource(key);
-    })
-    .then(function (ttlFromSource) {
-      ttl = ttlFromSource;
-      return promise_getValFromSource(key, type);
-    })
-    .then(function (valFromSource) {
-      val = valFromSource;
-      return promise_setTarget(type, key, val, ttl);
-    })
-    .then(function (success) {
-      console.log(success);
-      return migrate(callback);
+
+      async.parallel([
+          function (cb){
+             promise_getTTLFromSource(key)
+              .then(function (ttlFromSource) {
+                ttl = ttlFromSource;
+                cb(null, ttlFromSource);
+              })
+              .done();
+          },
+          function (cb){
+            promise_getValFromSource(key, typeFromSource)
+              .then(function (valFromSource) {
+                val = valFromSource;
+                cb(null, valFromSource)
+              })
+              .done();
+          }
+      ],
+      function (err, results) {
+          if (err) {
+            console.log(err);
+            process.exit();
+          }
+
+          promise_setTarget(type, key, val, ttl)
+            .then(function (success) {
+              var elapsed = process.hrtime(start)[1] / 1000000; // divide by a million to get nano to milli
+              console.log(success + ' took ' + elapsed + 'ms');
+              return migrate(callback);
+            })
+            .done();
+      });
+
     })
     .done();
 }
