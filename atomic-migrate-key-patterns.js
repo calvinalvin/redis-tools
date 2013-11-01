@@ -197,11 +197,11 @@ function migrateKeys(patternsArray) {
  
     pattern = patternsArray.pop();
  
-    console.log("going to migrate: " + pattern);
+    console.log("going to migrate: ".cyan + pattern);
  
     source.keys(pattern, function (err, keys) {
         if (err) return console.log("error: "+err);
-        else console.log('keys found: '+keys.length);
+        else console.log('keys found: '.cyan +keys.length);
  
         g_keys = keys;
         g_last_n = keys.length;
