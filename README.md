@@ -6,7 +6,7 @@ Miscellaneous redis tools written in Nodejs
 
 ## atomic-migrate-key-patterns.js
 
-Atomic migration of redis keys based on pattern match from one instance to another. This is not an ideal solution. You should use the built in redis MIGRATE command if possible. see redis MIGRATE: http://redis.io/commands/migrate
+Atomic migration of redis keys based on pattern match from one instance to another. This is not an ideal solution. You should use the built in redis MIGRATE command if possible. see [redis MIGRATE command](http://redis.io/commands/migrate).
 
 
 #### Use this if:
