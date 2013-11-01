@@ -55,11 +55,11 @@ if (targetOpts.auth) target.auth(targetOpts.auth);
 console.log("starting keys migration "+(new Date()));
 
 source.on("error", function (err) {
-    console.log("Error " + err);
+    console.log("Error ".red + err);
 });
  
 target.on("error", function (err) {
-    console.log("Error " + err);
+    console.log("Error ".red + err);
 });
 
 // stores all keys in memory during operation
@@ -197,7 +197,7 @@ function migrateKeys(patternsArray) {
  
     pattern = patternsArray.pop();
  
-    console.log("going to migrate: ".cyan + pattern);
+    console.log("going to migrate pattern matches for: ".cyan + pattern);
  
     source.KEYS(pattern, function (err, keys) {
         if (err) return console.log("error: "+err);
