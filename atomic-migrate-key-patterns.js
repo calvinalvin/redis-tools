@@ -101,7 +101,7 @@ function promise_getTypeFromSource(key) {
 function promise_getTTLFromSource(key) {
   var def = deferred();
 
-  source.ttl(key, function (err, reply) {
+  source.TTL(key, function (err, reply) {
     if (err) return def.reject(err);
     return def.resolve(reply);
   });
@@ -199,7 +199,7 @@ function migrateKeys(patternsArray) {
  
     console.log("going to migrate: ".cyan + pattern);
  
-    source.keys(pattern, function (err, keys) {
+    source.KEYS(pattern, function (err, keys) {
         if (err) return console.log("error: "+err);
         else console.log('keys found: '.cyan +keys.length);
  
