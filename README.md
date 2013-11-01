@@ -29,7 +29,7 @@ Atomic migration of redis keys based on pattern match from one instance to anoth
 - Set ```targetOpts``` for the target redis instance. 
 - Set ```patterns``` to match keys to migrate. See [redis KEYS and patterns](http://redis.io/commands/keys)
 
-```
+```javascript
 var sourceOpts = {
   hostname: 'source.redistogo.com',
   port: 1234,
