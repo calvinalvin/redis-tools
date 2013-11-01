@@ -22,3 +22,32 @@ Atomic migration of redis keys based on pattern match from one instance to anoth
 
 ###### Currently there is no option to automatically delete keys after they have been migrated. This is by design to prevent accidental deletion of keys.
  - You can delete keys manually by use the atomic-delete-key-patterns.js program to delete all keys matching a pattern
+
+#### Usage:
+
+- Set ```sourceOpts``` for the source redis instance. 
+- Set ```targetOpts``` for the target redis instance. 
+- Set ```patterns``` to match keys to migrate. See [redis KEYS and patterns](http://redis.io/commands/keys)
+
+```
+var sourceOpts = {
+  hostname: 'source.redistogo.com',
+  port: 1234,
+  // set auth: null if no authentication is required
+  auth: "iusiusysiuysiusyisuysiusyiusysiuysiusyisuysiuys"
+};
+ 
+var targetOpts = {
+    hostname: 'target.redistogo.com',
+    port: 5678,
+    // set auth: null if no authentication is required
+    auth: "mmnbewmnewbmwenbewmnbwemnwebwmenbwemnwemnwben"
+};
+ 
+// add here the patterns for the keys you want to migrate from a source instance to a target instance
+var patterns = [
+  "user:*",
+  "session:*",
+  "wh[ae]tever"
+];
+```
