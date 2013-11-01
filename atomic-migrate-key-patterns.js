@@ -40,7 +40,6 @@
   THE SOFTWARE.
 */
 
-*/
 
 var sys = require('sys')
   , redis = require('redis')
